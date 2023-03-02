@@ -1,0 +1,8 @@
+name = "ambadevi-aarti-app-web"
+main = ""
+compatibility_date = "2023-03-01"
+
+[[ d1_databases ]]
+binding = "ambadeviAartiAppWeb"
+database_name = "ambadevi-aarti-app-web"
+database_id = "a6ca045c-a368-40c9-b148-c03db865b425"
