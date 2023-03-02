@@ -42,7 +42,11 @@ export default function Item() {
       };
     }
     setAll(locationData.state.bookType, allAarti);
-    navigate("/");
+    navigate("/", {
+      state: {
+        selected: locationData.state.bookType,
+      },
+    });
   };
 
   return (

@@ -1,5 +1,6 @@
 import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
+import { useLocation } from "react-router";
 import {
   getAll,
   setAll,
@@ -12,12 +13,17 @@ import {
 } from "./utils";
 
 function App() {
+  let locationData = useLocation();
   const [bookType, setBookType] = React.useState(AARTI_SANGRAH);
   const [items, setItems] = React.useState([]);
 
   useEffect(() => {
     setItems(getAll(bookType));
   }, [bookType]);
+
+  useEffect(() => {
+    if (locationData.state?.selected) setBookType(locationData.state.selected);
+  }, []);
 
   const delItem = (index, name) => {
     if (window.confirm(`Are you sure to delete - ${name} ?`)) {
