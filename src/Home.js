@@ -85,11 +85,11 @@ function App() {
 
         <button
           onClick={() => {
-            saveFile(`${bookType}.json`, JSON.stringify(items));
+            saveFile(`${bookType}-${Date.now()}.json`, JSON.stringify(items));
           }}
           className="bg-blue-500 mr-12  hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full"
         >
-          Download {bookType}.JSON
+          Download JSON
         </button>
       </div>
       <div className=" rounded-lg border border-gray-200 shadow-md m-5">
