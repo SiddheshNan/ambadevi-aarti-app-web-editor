@@ -4,42 +4,45 @@ import { useNavigate } from "react-router-dom";
 import { getAll, setAll } from "./utils";
 
 export default function Item() {
-  let data = useLocation();
+  let locationData = useLocation();
   const navigate = useNavigate();
 
   const [state, setState] = React.useState({
     number: "",
     name: "",
-    search_txt: [],
+    search_txt: "",
   });
 
-  const [txtBox, setTxtBox] = React.useState("");
-
   useEffect(() => {
-    if (!data.state.isNew) {
-      setState(data.state.aarti);
-      setTxtBox(data.state.aarti.search_txt.join("\n"));
+    if (!locationData.state.isNew) {
+      const allAarti = getAll(locationData.state.bookType);
+
+      const currentAarti = allAarti[locationData.state.aarti_index];
+
+      setState({
+        ...currentAarti,
+        search_txt: currentAarti.search_txt.join("\n"),
+      });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const onSave = () => {
-    const arr = txtBox.split("\n");
-    const newState = { ...state, search_txt: arr };
-    setState(newState);
+    const allAarti = getAll(locationData.state.bookType);
 
-    const aartiData = getAll();
-
-    if (data.state.isNew) {
-      aartiData.push(newState);
-      setAll(aartiData);
-      navigate("/");
-      return;
+    if (locationData.state.isNew) {
+      allAarti.push({
+        ...state,
+        search_txt: state.search_txt.split("\n"),
+      });
     } else {
-      aartiData[data.state.index] = newState;
-      setAll(aartiData);
-      navigate("/");
+      allAarti[locationData.state.aarti_index] = {
+        ...state,
+        search_txt: state.search_txt.split("\n"),
+      };
     }
+    setAll(locationData.state.bookType, allAarti);
+    navigate("/");
   };
 
   return (
@@ -51,7 +54,9 @@ export default function Item() {
               Action :{" "}
               <span className="text-indigo-600">
                 {" "}
-                {data.state.isNew ? "Add NEW" : "Edit"}
+                {locationData.state.isNew
+                  ? `ADD NEW ${locationData.state.bookType}`
+                  : `EDIT ${locationData.state.bookType} - ${locationData.state.aarti_index}`}
               </span>
             </h3>
           </div>
@@ -105,8 +110,13 @@ export default function Item() {
                 <textarea
                   rows={10}
                   className="appearance-none block w-full bg-gray-100 border-gray-400  text-gray-700 border  rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white"
-                  value={txtBox}
-                  onChange={(e) => setTxtBox(e.target.value)}
+                  value={state.search_txt}
+                  onChange={(e) =>
+                    setState((prev) => ({
+                      ...prev,
+                      search_txt: e.target.value,
+                    }))
+                  }
                 />
               </div>
               <div className="flex justify-between w-full px-3">

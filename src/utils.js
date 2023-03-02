@@ -12,7 +12,12 @@ export function saveFile(filename, data) {
   }
 }
 
-export const getAll = () =>
-  JSON.parse(localStorage.getItem("aartiList1")) || [];
-export const setAll = (aartiList) =>
-  localStorage.setItem("aartiList1", JSON.stringify(aartiList));
+export const AARTI_SANGRAH = "AARTI_SANGRAH";
+export const ASHTAK_PUSTIKA_1 = "ASHTAK_PUSTIKA_1";
+export const ASHTAK_PUSTIKA_2 = "ASHTAK_PUSTIKA_2";
+export const KAKAD_AARTI = "KAKAD_AARTI";
+export const OTHER_PDF = "OTHER_PDF";
+
+export const getAll = (key) => JSON.parse(localStorage.getItem(key)) || [];
+
+export const setAll = (key, object) => localStorage.setItem(key, JSON.stringify(object));

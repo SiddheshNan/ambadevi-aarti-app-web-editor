@@ -1,49 +1,95 @@
 import React, { useEffect } from "react";
-// import aartiData from "./demo";
 import { Link } from "react-router-dom";
-import { getAll, setAll, saveFile } from "./utils";
+import {
+  getAll,
+  setAll,
+  saveFile,
+  AARTI_SANGRAH,
+  ASHTAK_PUSTIKA_1,
+  ASHTAK_PUSTIKA_2,
+  KAKAD_AARTI,
+  OTHER_PDF,
+} from "./utils";
 
 function App() {
-  const [state, setState] = React.useState([]);
+  const [bookType, setBookType] = React.useState(AARTI_SANGRAH);
+  const [items, setItems] = React.useState([]);
 
   useEffect(() => {
-    setState(getAll());
-    // setState(aartiData);
-  }, []);
+    setItems(getAll(bookType));
+  }, [bookType]);
 
   const delItem = (index, name) => {
     if (window.confirm(`Are you sure to delete - ${name} ?`)) {
-      const newState = [...state];
+      const newState = [...items];
       newState.splice(index, 1);
-      setState(newState);
-      setAll(newState);
+      setItems(newState);
+      setAll(bookType, newState);
     }
   };
 
   return (
     <div className="App">
       <div className="max-w-screen-md mx-auto p-3.5">
+        <div className="inline-flex rounded-md shadow-sm" role="group">
+          <button
+            type="button"
+            onClick={() => setBookType(AARTI_SANGRAH)}
+            className="px-4 py-2 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-l-lg hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-2 focus:ring-blue-700 focus:text-blue-700 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-blue-500 dark:focus:text-white"
+          >
+            {AARTI_SANGRAH}
+          </button>
+          <button
+            type="button"
+            onClick={() => setBookType(ASHTAK_PUSTIKA_1)}
+            className="px-4 py-2 text-sm font-medium text-gray-900 bg-white border-t border-b border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-2 focus:ring-blue-700 focus:text-blue-700 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-blue-500 dark:focus:text-white"
+          >
+            {ASHTAK_PUSTIKA_1}
+          </button>
+          <button
+            type="button"
+            onClick={() => setBookType(ASHTAK_PUSTIKA_2)}
+            className="px-4 py-2 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-r-md hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-2 focus:ring-blue-700 focus:text-blue-700 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-blue-500 dark:focus:text-white"
+          >
+            {ASHTAK_PUSTIKA_2}
+          </button>
+          <button
+            type="button"
+            onClick={() => setBookType(KAKAD_AARTI)}
+            className="px-4 py-2 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-r-md hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-2 focus:ring-blue-700 focus:text-blue-700 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-blue-500 dark:focus:text-white"
+          >
+            {KAKAD_AARTI}
+          </button>
+          <button
+            type="button"
+            onClick={() => setBookType(OTHER_PDF)}
+            className="px-4 py-2 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-r-md hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-2 focus:ring-blue-700 focus:text-blue-700 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-blue-500 dark:focus:text-white"
+          >
+            {OTHER_PDF}
+          </button>
+        </div>
+
+        <br />
+        <br />
+
+        <h2>Current Selected: {bookType}</h2>
+        <br />
+
         <Link
           to="/item"
-          state={{ isNew: true }}
+          state={{ isNew: true, bookType }}
           className="bg-blue-500 mr-12 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full"
         >
           New Item
         </Link>
-        <button
-          onClick={() => setAll(state)}
-          className="bg-blue-500 mr-12  hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full"
-        >
-          Save State
-        </button>
 
         <button
           onClick={() => {
-            saveFile(`data-${Date.now()}.json`, JSON.stringify(state));
+            saveFile(`${bookType}.json`, JSON.stringify(items));
           }}
           className="bg-blue-500 mr-12  hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full"
         >
-          Download JSON
+          Download {bookType}.JSON
         </button>
       </div>
       <div className=" rounded-lg border border-gray-200 shadow-md m-5">
@@ -59,13 +105,13 @@ function App() {
               <th scope="col" className="px-6 py-4 font-medium text-gray-900">
                 Search
               </th>
-            
+
               <th scope="col" className="px-6 py-4 font-medium text-gray-900" />
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-100 border-t border-gray-100">
-            {state.map((aarti, index0) => (
-              <tr key={index0} className="hover:bg-gray-50">
+            {items.map((aarti, aarti_index) => (
+              <tr key={aarti_index} className="hover:bg-gray-50">
                 <td className="px-6 py-4">
                   <h1 className="font-bold text-gray-700">
                     <span className="font-bold mr-3 text-lg inline-flex items-center  pl-3.5 text-xs font-semibold text-red-500">
@@ -75,19 +121,22 @@ function App() {
                   </h1>
                 </td>
                 <td className="px-6 py-4">
-                  {aarti.search_txt.map((item, index1) => (
+                  {aarti.search_txt.map((item, search_txt_index) => (
                     <span
-                      key={index1}
+                      key={search_txt_index}
                       className="flex mb-1 items-cente text-sm font-semibold text-blue-600"
                     >
                       {item}
                     </span>
                   ))}
                 </td>
-               
+
                 <td className="px-6 py-4">
                   <div className="flex justify-end gap-4">
-                    <Link to={`/item`} state={{ isNew: false, aarti, index: index0 }}>
+                    <Link
+                      to={`/item`}
+                      state={{ isNew: false, bookType, aarti_index }}
+                    >
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
                         fill="none"
@@ -105,7 +154,7 @@ function App() {
                       </svg>
                     </Link>
                     <button
-                      onClick={() => delItem(index0, aarti.name)}
+                      onClick={() => delItem(aarti_index, aarti.name)}
                       type="button"
                     >
                       <svg
